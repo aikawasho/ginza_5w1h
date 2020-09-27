@@ -70,7 +70,9 @@ class parse_5w1h(object):
         Mod_pattern2 = [{"TEXT":"いつ"}]
         
         Task_pattern1 = [{"TEXT":"たい"},{"TEXT":"の"},{"POS":{"REGEX":"PUNCT"},"OP":"*"}]
-        #Task_pattern2 = [{"TEXT":"たい"},{"TEXT":"の"},{"POS":{"REGEX":"PUNCT"},"OP":"*"}]
+        Task_pattern2 = [{"TEXT":"ない"},{"TEXT":"か"},{"TEXT":"な"},{"POS":{"REGEX":"PUNCT"},"OP":"*"}]
+        Task_pattern3 = [{"POS":{"REGEX":"VERB|AUX"}},{"TEXT":"ない"},{"TEXT":"で"},{"TEXT":"ね"},{"POS":{"REGEX":"PUNCT"},"OP":"*"}]
+        Task_pattern4 = [{"POS":"AUX"},{"POS":"SCONJ"},{"TEXT":"ください"},{"POS":{"REGEX":"PUNCT"},"OP":"*"}]
 
         #matcherのコールバック関数
         #5w1hのラベルだけ付与
@@ -155,7 +157,7 @@ class parse_5w1h(object):
         matcher.add("Why", add_label,Why_pattern1)
         matcher.add("Mod", add_right_left,Mod_pattern1,Mod_pattern2)
         
-        matcher.add("Task", add_label_type,Task_pattern1)
+        matcher.add("Task", add_label_type,Task_pattern1,Task_pattern2,Task_pattern3,Task_pattern4)
 
         
         doc = nlp(text)
@@ -228,26 +230,33 @@ class parse_5w1h(object):
     def display_type(self):
         doc = self.doc
 
-        for sent in doc.sents:
-            an_text = []
-            an_label = ''
-           # print(sent)
-            start = len(sent)-1
-            while start >= 0:
-                if sent[start]._._type:
-                    end = start+1
+        start = len(doc)-1
+        while start >= 0:
+            if doc[start]._._type:
+                end = start+1
+
+
+                while start >= 0:
                     
                     
-                    while (sent[start+1]._._5w1h == sent[start]._._5w1h):    
-     
-                        start = start -1
-                        if start-1 < 0:
-                            break
-                  
-                    print(sent[start:end])
-                    print(sent[end-1]._._type)
-                    print('\n')
-                else:
+                    if (doc[start]._._5w1h == "Who" or doc[start]._._5w1h == "What") and (doc[start].pos_ != "PRON" and doc[start].pos_ != "ADP"):
+                        break
                     start = start -1
                     
+
+
+                while start >= 1: 
+
+                    if(doc[start-1]._._5w1h != doc[start]._._5w1h):
+                        break
+                    start = start -1
+
+
+
+                print(doc[start:end])
+                print(doc[end-1]._._type)
+                print('\n')
+            else:
+                start = start -1
+
         

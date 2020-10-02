@@ -2,6 +2,7 @@ import spacy
 from spacy.matcher import Matcher
 from spacy.tokens import Token
 import re
+import pytextrank
 
 #
 class parse_5w1h(object):
@@ -15,13 +16,15 @@ class parse_5w1h(object):
         nlp = spacy.load('ja_ginza')
         #マッチャーインスタンス化
         matcher = Matcher(nlp.vocab)
-
+        #TextRank
+        tr = pytextrank.TextRank()
+        nlp.add_pipe(tr.PipelineComponent, name='textrank', last=True)
+        
         if not Token.has_extension("_5w1h"):
             Token.set_extension("_5w1h", default='None')
             
         if not Token.has_extension("_type"):
             Token.set_extension("_type", default=None)
-
 
          #5w1hパターン
         Where_pattern1 = [{"POS":{"REGEX":"NOUN|PROPN|PRON"},"ENT_TYPE":{"REGEX":"Country|Province"}}]
@@ -258,5 +261,15 @@ class parse_5w1h(object):
                 print('\n')
             else:
                 start = start -1
+                
+    def display_imp(self,imp_list):
+        doc = self.doc
+        
+        for sent in doc.sents:
+            for token in sent:
+                if token.text in imp_list:
+                    print(sent)
+                    break
+        
 
         

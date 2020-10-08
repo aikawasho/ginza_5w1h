@@ -7,8 +7,11 @@ import pytextrank
 #
 class parse_5w1h(object):
 
-    def __init__(self,doc = None):
+    def __init__(self,doc = None, _5w1hs = [], _5w1h_s = [], _5w1h_e = []):
         self.doc = doc
+        self._5w1hs = _5w1hs
+        self._5w1h_s = _5w1h_s 
+        self._5w1h_e = _5w1h_e
         
 
     def extract(self,text):
@@ -217,15 +220,24 @@ class parse_5w1h(object):
             an_text = []
             an_label = ''
            # print(sent)
+            self._5w1h_s.append(sent.start)
             for i,token in enumerate(sent):
+                
                 an_text.append(token.text)
                 if i+1 < len(sent):
-                    if (sent[i+1]._._5w1h != token._._5w1h):               
+                    if (sent[i+1]._._5w1h != token._._5w1h):
                         print(''.join(an_text))
                         print(token._._5w1h)
                         print('\n')
+                        self._5w1hs.append(''.join(an_text))
+                        self._5w1h_e.append(sent.start+i+1)
+                        self._5w1h_s.append(sent.start+i+1)
                         an_text = []
+            
                 else:
+                    self._5w1h_e.append(sent.end)
+                    self._5w1hs.append(''.join(an_text)) 
+                
                     print(''.join(an_text))
                     print(token._._5w1h)
                     print('\n')

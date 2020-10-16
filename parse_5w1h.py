@@ -7,11 +7,12 @@ import pytextrank
 #
 class parse_5w1h(object):
 
-    def __init__(self,doc = None, _5w1hs = [], _5w1h_s = [], _5w1h_e = []):
+    def __init__(self,doc = None, _5w1hs = [], _5w1h_s = [], _5w1h_e = [],_5w1h_type = []):
         self.doc = doc
         self._5w1hs = _5w1hs
         self._5w1h_s = _5w1h_s 
         self._5w1h_e = _5w1h_e
+        self._5w1h_type = _5w1h_type
         
 
     def extract(self,text):
@@ -28,6 +29,7 @@ class parse_5w1h(object):
             
         if not Token.has_extension("_type"):
             Token.set_extension("_type", default=None)
+
 
          #5w1hパターン
         Where_pattern1 = [{"POS":{"REGEX":"NOUN|PROPN|PRON"},"ENT_TYPE":{"REGEX":"Country|Province"}}]
@@ -232,11 +234,15 @@ class parse_5w1h(object):
                         self._5w1hs.append(''.join(an_text))
                         self._5w1h_e.append(sent.start+i+1)
                         self._5w1h_s.append(sent.start+i+1)
+                        self._5w1h_type.append(token._._5w1h)
+
                         an_text = []
             
                 else:
                     self._5w1h_e.append(sent.end)
                     self._5w1hs.append(''.join(an_text)) 
+                    self._5w1h_type.append(token._._5w1h)
+
                 
                     print(''.join(an_text))
                     print(token._._5w1h)

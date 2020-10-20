@@ -4,15 +4,18 @@ from spacy.tokens import Token
 import re
 import pytextrank
 
+class phrase_5w1h(object):
+    def __init__(self,phrase = None, start = None, end = None,_type = None):
+        self.phrase = phrase
+        self.start = start
+        self.end = end
+        self._type = _type
+        
 #
 class parse_5w1h(object):
 
-    def __init__(self,doc = None, _5w1hs = [], _5w1h_s = [], _5w1h_e = [],_5w1h_type = []):
+    def __init__(self,doc = None):
         self.doc = doc
-        self._5w1hs = _5w1hs
-        self._5w1h_s = _5w1h_s 
-        self._5w1h_e = _5w1h_e
-        self._5w1h_type = _5w1h_type
         
 
     def extract(self,text):
@@ -217,12 +220,13 @@ class parse_5w1h(object):
 
     def display_5w1h(self):
         doc = self.doc
-
+        _5w1h = phrase_5w1h()
+        _5w1h_list = []
         for sent in doc.sents:
             an_text = []
             an_label = ''
            # print(sent)
-            self._5w1h_s.append(sent.start)
+            _5w1h.start = sent.start
             for i,token in enumerate(sent):
                 
                 an_text.append(token.text)
@@ -231,22 +235,28 @@ class parse_5w1h(object):
                         print(''.join(an_text))
                         print(token._._5w1h)
                         print('\n')
-                        self._5w1hs.append(''.join(an_text))
-                        self._5w1h_e.append(sent.start+i+1)
-                        self._5w1h_s.append(sent.start+i+1)
-                        self._5w1h_type.append(token._._5w1h)
+                        _5w1h.phrase = ''.join(an_text)
+                        _5w1h.end = sent.start+i+1
+                        _5w1h._type=token._._5w1h
+                        _5w1h_list.append(_5w1h)
+                        _5w1h = phrase_5w1h()
+                        _5w1h.start=sent.start+i+1
+                        
 
                         an_text = []
             
                 else:
-                    self._5w1h_e.append(sent.end)
-                    self._5w1hs.append(''.join(an_text)) 
-                    self._5w1h_type.append(token._._5w1h)
+                    _5w1h.end = sent.end
+                    _5w1h.phrase = ''.join(an_text) 
+                    _5w1h._type = token._._5w1h
+                    _5w1h_list.append(_5w1h)
+                    _5w1h = phrase_5w1h()
 
-                
+ 
                     print(''.join(an_text))
                     print(token._._5w1h)
                     print('\n')
+        return(_5w1h_list)
                     
     def display_type(self):
         doc = self.doc

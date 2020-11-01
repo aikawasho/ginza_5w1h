@@ -232,9 +232,9 @@ class parse_5w1h(object):
                 an_text.append(token.text)
                 if i+1 < len(sent):
                     if (sent[i+1]._._5w1h != token._._5w1h):
-                        print(''.join(an_text))
-                        print(token._._5w1h)
-                        print('\n')
+                        #print(''.join(an_text))
+                        #print(token._._5w1h)
+                        #print('\n')
                         _5w1h.phrase = ''.join(an_text)
                         _5w1h.end = sent.start+i+1
                         _5w1h._type=token._._5w1h
@@ -253,9 +253,9 @@ class parse_5w1h(object):
                     _5w1h = phrase_5w1h()
 
  
-                    print(''.join(an_text))
-                    print(token._._5w1h)
-                    print('\n')
+                    #print(''.join(an_text))
+                    #print(token._._5w1h)
+                    #print('\n')
         return(_5w1h_list)
                     
     def display_type(self):

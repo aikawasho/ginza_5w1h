@@ -191,12 +191,12 @@ class parse_5w1h(object):
 
                     end = start + 1
 
-                    while doc[end].head.i == start and end != len(doc):
+                    while end < len(doc):
+                        if doc[end].head.i != start:
+                            break
 
                         end = end + 1
 
-                        if end == len(doc):
-                            break
 
                     if (re.search("ので|だから",doc[end-2:end-1].text) or re.search("ので、|だから、",doc[end-3:end-1].text)
                         or re.search("ため",doc[end-1:end-1].text) or re.search("ため、",doc[end-2:end-1].text)) and doc[end-1].pos_ != "ADP":

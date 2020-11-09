@@ -1,9 +1,10 @@
 import MeCab
+mecab = MeCab.Tagger ("-Owakati")
 
 def Rouge1(out,ref):
-    mecab = MeCab.Tagger ("-Owakati")
+    Fm = 0
     out_list = mecab.parse(out).split()
-    ref_list = mecab.parse(ref).split()
+    ref_list = set(mecab.parse(ref).split())
     mach = 0
     for word in ref_list:
         if word in out_list:
@@ -13,15 +14,16 @@ def Rouge1(out,ref):
         P = mach/(len(out_list))
     else:
         P = 0
-    Fm = 2*R*P/(R+P)
+    if R+P != 0: 
+        Fm = 2*R*P/(R+P)
     return(Fm)
 
 def Rouge2(out,ref):
-    mecab = MeCab.Tagger ("-Owakati")
+    Fm = 0
     out_list = mecab.parse(out).split()
     ref_list = mecab.parse(ref).split()
     mach = 0
-    for i, word in enumerate(ref_list):
+    for i, word in enumerate(ref_list[:-2]):
         for j,word2 in enumerate(out_list[:-2]):
             if word == word2 and ref_list[i+1]==out_list[j+1]:
                 mach += 1
@@ -31,11 +33,12 @@ def Rouge2(out,ref):
         P = mach/(len(out_list))
     else:
         P = 0
-    Fm = 2*R*P/(R+P)
-    return(Fm)  
+    if R+P != 0: 
+        Fm = 2*R*P/(R+P)
+    return(Fm)
 
 def RougeL(out,ref):
-    mecab = MeCab.Tagger ("-Owakati")
+    Fm = 0
     out_list = mecab.parse(out).split()
     ref_list = mecab.parse(ref).split()
     mach = 0
@@ -58,6 +61,7 @@ def RougeL(out,ref):
         P = max_mach/(len(out_list))
     else:
         P = 0
-    Fm = 2*R*P/(R+P)
-    return(Fm)  
+    if R+P != 0: 
+        Fm = 2*R*P/(R+P)
+    return(Fm)
     
